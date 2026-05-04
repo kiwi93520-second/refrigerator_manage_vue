@@ -1,5 +1,9 @@
-<script setup></script>
+<script setup>
+import Welcome from "./components/pages/Welcome.vue";
+</script>
 
-<template></template>
+<template>
+  <Welcome></Welcome>
+</template>
 
 <style scoped></style>
