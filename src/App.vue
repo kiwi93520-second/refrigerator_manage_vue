@@ -6,8 +6,8 @@ import Layout from "./components/layouts/Layout.vue";
 
 <template>
   <Layout>
-    <Welcome></Welcome>
-    <Dashboard></Dashboard>
+    <Welcome />
+    <Dashboard />
   </Layout>
 </template>
 
