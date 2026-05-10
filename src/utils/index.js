@@ -1,28 +1,118 @@
-export const StoredCategories = {
-  0: "Expired",
-  1: "Soon to expire",
-  2: "Refrigerated",
-  3: "Frozen",
-  4: "Cabinet",
+export const StorageCategories = {
+  refrigerated: "Refrigerated",
+  frozen: "Frozen",
+  cabinet: "Cabinet",
+};
+export const StatusCategories = {
+  expired: "Expired",
+  soon: "Soon to expire",
+  fresh: "Fresh",
 };
 
-export const Ingredient = {
-  0: {
+export const Ingredient = [
+  {
     name: "Eggs",
-    storeDate: newDate(),
-    expireDate: new Date() + 2,
-    Stored: StoredCategories[1],
+    storeDate: new Date(),
+    expireDate: new Date(Date.now() + 2 * 86400000),
+    storage: StorageCategories.refrigerated,
+    status: StatusCategories.soon,
   },
-  1: {
+  {
     name: "Eggs",
-    storeDate: newDate(),
-    expireDate: new Date() + 30,
-    Stored: StoredCategories[3],
+    storeDate: new Date(),
+    expireDate: new Date(Date.now() + 2 * 86400000),
+    storage: StorageCategories.refrigerated,
+    status: StatusCategories.soon,
   },
-  2: {
+  {
     name: "Eggs",
-    storeDate: newDate(),
+    storeDate: new Date(),
+    expireDate: new Date(Date.now() + 2 * 86400000),
+    storage: StorageCategories.refrigerated,
+    status: StatusCategories.soon,
+  },
+  {
+    name: "Eggs",
+    storeDate: new Date(),
+    expireDate: new Date(Date.now() + 2 * 86400000),
+    storage: StorageCategories.refrigerated,
+    status: StatusCategories.soon,
+  },
+  {
+    name: "Eggs",
+    storeDate: new Date(),
+    expireDate: new Date(Date.now() + 2 * 86400000),
+    storage: StorageCategories.refrigerated,
+    status: StatusCategories.soon,
+  },
+  {
+    name: "Eggs2",
+    storeDate: new Date(),
+    expireDate: new Date(Date.now() + 30 * 86400000),
+    storage: StorageCategories.frozen,
+    status: StatusCategories.fresh,
+  },
+  {
+    name: "Eggs2",
+    storeDate: new Date(),
+    expireDate: new Date(Date.now() + 30 * 86400000),
+    storage: StorageCategories.frozen,
+    status: StatusCategories.fresh,
+  },
+  {
+    name: "Eggs2",
+    storeDate: new Date(),
+    expireDate: new Date(Date.now() + 30 * 86400000),
+    storage: StorageCategories.frozen,
+    status: StatusCategories.fresh,
+  },
+  {
+    name: "eeeeee",
+    storeDate: new Date(),
+    expireDate: new Date(Date.now() + 30 * 86400000),
+    storage: StorageCategories.frozen,
+    status: StatusCategories.fresh,
+  },
+  {
+    name: "Eggs2",
+    storeDate: new Date(),
+    expireDate: new Date(Date.now() + 30 * 86400000),
+    storage: StorageCategories.frozen,
+    status: StatusCategories.fresh,
+  },
+  {
+    name: "Eggs2",
+    storeDate: new Date(),
+    expireDate: new Date(Date.now() + 30 * 86400000),
+    storage: StorageCategories.frozen,
+    status: StatusCategories.fresh,
+  },
+  {
+    name: "Eggs3",
+    storeDate: new Date(),
     expireDate: new Date(),
-    Stored: StoredCategories[0],
+    storage: StorageCategories.refrigerated,
+    status: StatusCategories.expired,
   },
-};
+  {
+    name: "Eggs3",
+    storeDate: new Date(),
+    expireDate: new Date(),
+    storage: StorageCategories.refrigerated,
+    status: StatusCategories.expired,
+  },
+  {
+    name: "Eggs3",
+    storeDate: new Date(),
+    expireDate: new Date(),
+    storage: StorageCategories.refrigerated,
+    status: StatusCategories.expired,
+  },
+  {
+    name: "Eggs3",
+    storeDate: new Date(),
+    expireDate: new Date(),
+    storage: StorageCategories.refrigerated,
+    status: StatusCategories.expired,
+  },
+];

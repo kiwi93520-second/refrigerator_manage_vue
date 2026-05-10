@@ -3,7 +3,7 @@ import Grid from "../Grid.vue";
 </script>
 
 <template>
-  <button>Add refrigerator</button>
+  <button>Food manage &rarr;</button>
   <Grid />
 </template>
 
