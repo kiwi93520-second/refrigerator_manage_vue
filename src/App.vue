@@ -4,7 +4,7 @@ import Dashboard from "./components/pages/Dashboard.vue";
 import Layout from "./components/layouts/Layout.vue";
 import FoodEdit from "./components/pages/FoodEdit.vue";
 
-const selectedDisplay = 2;
+const selectedDisplay = 3;
 </script>
 
 <template>
