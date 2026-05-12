@@ -1,4 +1,5 @@
 <script setup>
+import { Ingredient } from "../../utils";
 // const recognition = new (
 //   window.SpeechRecognition || window.webkitSpeechRecognition
 // )();
@@ -106,7 +107,7 @@ const confirmAdd = () => {
 </script>
 
 <template>
-  <div class="voice-module">
+  <section class="add-food">
     <button @click="toggleListen" :class="{ 'btn-active': isListening }">
       {{ isListening ? "正在聽..." : "按我說話" }}
     </button>
@@ -125,7 +126,18 @@ const confirmAdd = () => {
       </p>
       <button @click="confirmAdd">確認新增</button>
     </div>
-  </div>
+  </section>
+
+  <!-- show food history -->
+  <section class="show-food">
+    <div v-for="(items, index) in Ingredient" :key="items.index">
+      <h2>{{ items.name }}</h2>
+      <p>{{ items.storeDate }}</p>
+      <p>{{ items.expireDate }}</p>
+      <p>{{ items.storage }}</p>
+      <p>{{ items.status }}</p>
+    </div>
+  </section>
 </template>
 
 <style scoped></style>
