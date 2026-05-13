@@ -104,6 +104,10 @@ const confirmAdd = () => {
   console.log("正式存入資料庫:", resultPreview);
   // 在這裡呼叫你的 API
 };
+
+const confirmDelete = (id) => {
+  Ingredient.value = Ingredient.value.filter((item) => item.id !== id);
+};
 </script>
 
 <template>
@@ -128,7 +132,7 @@ const confirmAdd = () => {
     </div>
   </section>
 
-  <!-- show food history -->
+  <!-- show food history & delete food-->
   <section class="show-food">
     <div v-for="(items, index) in Ingredient" :key="items.index">
       <h2>{{ items.name }}</h2>
@@ -136,6 +140,8 @@ const confirmAdd = () => {
       <p>{{ items.expireDate }}</p>
       <p>{{ items.storage }}</p>
       <p>{{ items.status }}</p>
+      <p>{{ items.id }}</p>
+      <button @click="confirmDelete(items.id)">確認刪除</button>
     </div>
   </section>
 </template>
