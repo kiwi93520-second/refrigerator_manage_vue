@@ -108,6 +108,19 @@ const confirmAdd = () => {
 const confirmDelete = (id) => {
   Ingredient.value = Ingredient.value.filter((item) => item.id !== id);
 };
+
+const editingId = ref(null);
+const editingField = ref("");
+
+const startEdit = (id, field) => {
+  editingId.value = id;
+  editingField.value = field;
+};
+
+const stopEdit = () => {
+  editingId.value = null;
+  editingField.value = "";
+};
 </script>
 
 <template>
@@ -135,11 +148,53 @@ const confirmDelete = (id) => {
   <!-- show food history & delete food-->
   <section class="show-food">
     <div v-for="(items, index) in Ingredient" :key="items.index">
-      <h2>{{ items.name }}</h2>
-      <p>{{ items.storeDate }}</p>
-      <p>{{ items.expireDate }}</p>
-      <p>{{ items.storage }}</p>
-      <p>{{ items.status }}</p>
+      <input
+        v-if="editingId === items.id && editingField === 'name'"
+        v-model="items.name"
+        @blur="stopEdit"
+      />
+      <h2 v-else @click="startEdit(items.id, 'name')">
+        {{ items.name }}
+      </h2>
+
+      <input
+        v-if="editingId === items.id && editingField === 'storeDate'"
+        v-model="items.storeDate"
+        @blur="stopEdit"
+      />
+
+      <p v-else @click="startEdit(items.id, 'storeDate')">
+        {{ items.storeDate }}
+      </p>
+
+      <input
+        v-if="editingId === items.id && editingField === 'expireDate'"
+        v-model="items.expireDate"
+        @blur="stopEdit"
+      />
+
+      <p v-else @click="startEdit(items.id, 'expireDate')">
+        {{ items.expireDate }}
+      </p>
+
+      <input
+        v-if="editingId === items.id && editingField === 'storage'"
+        v-model="items.storage"
+        @blur="stopEdit"
+      />
+      <p v-else @click="startEdit(items.id, 'storage')">
+        {{ items.storage }}
+      </p>
+
+      <input
+        v-if="editingId === items.id && editingField === 'status'"
+        v-model="items.status"
+        @blur="stopEdit"
+      />
+      <p v-else @click="startEdit(items.id, 'status')">
+        {{ items.status }}
+      </p>
+
       <p>{{ items.id }}</p>
       <button @click="confirmDelete(items.id)">確認刪除</button>
     </div>
