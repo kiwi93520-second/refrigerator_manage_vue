@@ -1,4 +1,8 @@
 import { ref } from "vue";
+import { createRouter, createWebHistory } from "vue-router";
+import Welcome from "../components/pages/Welcome.vue";
+import Dashboard from "../components/pages/Dashboard.vue";
+import FoodEdit from "../components/pages/FoodEdit.vue";
 
 export const StorageCategories = {
   refrigerated: "Refrigerated",
@@ -142,3 +146,16 @@ export const Ingredient = ref([
     status: StatusCategories.expired,
   },
 ]);
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    { path: "/", redirect: "/dashboard" }, // 或 component: Dashboard
+
+    { path: "/Welcome", component: Welcome },
+    { path: "/Dashboard", component: Dashboard },
+    { path: "/FoodEdit", component: FoodEdit },
+  ],
+});
+
+export default router;

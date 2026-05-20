@@ -1,19 +1,20 @@
 <script setup>
-import { computed } from "vue";
+import { computed, unref } from "vue";
 import { Ingredient } from "../utils";
 
 const grouped = computed(() => {
-  const sorted = [...Ingredient].sort((a, b) => a.expireDate - b.expireDate);
+  const items = unref(Ingredient) || [];
+
+  const sorted = [...items].sort((a, b) => {
+    const da = new Date(a.expireDate).getTime();
+    const db = new Date(b.expireDate).getTime();
+    return da - db;
+  });
 
   return sorted.reduce((acc, item) => {
-    const key = item.status;
-
-    if (!acc[key]) {
-      acc[key] = [];
-    }
-
+    const key = item.status ?? "unknown";
+    if (!acc[key]) acc[key] = [];
     acc[key].push(item);
-
     return acc;
   }, {});
 });
