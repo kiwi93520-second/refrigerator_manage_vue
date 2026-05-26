@@ -1,35 +1,22 @@
 <script setup>
 import { computed, unref } from "vue";
-import { Ingredient } from "../utils";
+import { useIngredients } from "../utils/index.js";
 
-const grouped = computed(() => {
-  const items = unref(Ingredient) || [];
+const { grouedIngredients } = useIngredients();
 
-  const sorted = [...items].sort((a, b) => {
-    const da = new Date(a.expireDate).getTime();
-    const db = new Date(b.expireDate).getTime();
-    return da - db;
-  });
-
-  return sorted.reduce((acc, item) => {
-    const key = item.status ?? "unknown";
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(item);
-    return acc;
-  }, {});
-});
+const statusOrder = ["Expired", "Soon to expire", "Fresh"];
 </script>
 
 <template>
   <section id="grid">
-    <div v-for="(items, group) in grouped" :key="group">
-      <h2>{{ group }}</h2>
+    <div v-for="status in statusOrder" :key="status">
+      <h2>{{ status }}</h2>
 
-      <div class="container">
+      <div class="container" v-if="grouedIngredients[status]">
         <button
-          v-for="item in items"
           class="card plan-card"
-          :class="item.status"
+          v-for="item in groupedIngredients[status]"
+          :key="item.id"
         >
           {{ item.name }}
         </button>
@@ -43,7 +30,7 @@ const grouped = computed(() => {
   background: #f3827e;
 }
 
-.Soon {
+.soon-to-expire {
   background: #ffc37e;
 }
 

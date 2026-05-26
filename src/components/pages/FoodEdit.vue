@@ -1,5 +1,5 @@
 <script setup>
-import { Ingredient } from "../../utils";
+// import { Ingredient } from "../../utils";
 // const recognition = new (
 //   window.SpeechRecognition || window.webkitSpeechRecognition
 // )();
@@ -146,7 +146,7 @@ const stopEdit = () => {
   </section>
 
   <!-- show food history & delete food-->
-  <section class="show-food">
+  <!-- <section class="show-food">
     <div v-for="(items, index) in Ingredient" :key="items.index">
       <input
         v-if="editingId === items.id && editingField === 'name'"
@@ -198,7 +198,7 @@ const stopEdit = () => {
       <p>{{ items.id }}</p>
       <button @click="confirmDelete(items.id)">確認刪除</button>
     </div>
-  </section>
+  </section> -->
 </template>
 
 <style scoped></style>
