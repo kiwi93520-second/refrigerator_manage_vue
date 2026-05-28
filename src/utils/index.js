@@ -30,56 +30,61 @@ export function useIngredients() {
 
   // catch data from supabase
   const fetchIngredients = async () => {
-    const { data, error } = await supabase.from("ingredients").select("*");
+    try {
+      const { data, error } = await supabase.from("ingredients").select("*");
 
-    if (error) console.error("Error loading data:", error);
-    else Ingredients.value = data;
+      if (error) {
+        console.error("錯誤:", error);
+      } else {
+        console.log("--- 原始資料檢查 ---");
+        console.table(data); // 這會把資料轉成表格印在 Console，看欄位名是不是 expire_date
+        Ingredients.value = data;
+      }
+    } catch (err) {
+      console.error("😥😥😥error:", err);
+    }
   };
 
   //define 快過期天數
   const SOON_TO_EXPIRE = 3;
 
-  //computed
+  //computedS
   const groupedIngredients = computed(() => {
+    const items = Ingredients.value || [];
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const processedItems = Ingredients.value.map((item) => {
+    const processed = items.map((item) => {
+      // ⚠️ 注意：Supabase 回傳的是下底線 expire_date
       const expire = new Date(item.expire_date);
-      const diffTime = expire - today;
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      const diffDays = Math.ceil((expire - today) / (1000 * 60 * 60 * 24));
 
       let status = "Fresh";
-      if (diffDays < 0) {
-        status = "Expired";
-      } else if (diffDays <= SOON_TO_EXPIRE) {
-        status = "Soon to expire";
-      }
+      if (diffDays < 0) status = "Expired";
+      else if (diffDays <= 3) status = "Soon to expire";
 
       return { ...item, dynamicStatus: status };
     });
 
-    //  sort by date
-    processedItems.sort(
-      (a, b) => new Date(a.expire_date) - new Date(b.expire_date),
+    return processed.reduce(
+      (acc, item) => {
+        const key = item.dynamicStatus;
+        if (acc[key]) acc[key].push(item);
+        return acc;
+      },
+      { Expired: [], "Soon to expire": [], Fresh: [] },
     );
-
-    return processedItems.reduce((acc, item) => {
-      const key = item.dynamicStatus;
-      if (!acc[key]) acc[key] = [];
-      acc[key].push(item);
-      return acc;
-    }, {});
   });
 
-  onMounted(fetchIngredients);
+  // onMounted(fetchIngredients);
 
   return { Ingredients, groupedIngredients, fetchIngredients };
 }
 
-onMounted(() => {
-  fetchIngredients();
-});
+// onMounted(() => {
+//   fetchIngredients();
+// });
 // export const Ingredient = ref([
 //   {
 //     id: 1,

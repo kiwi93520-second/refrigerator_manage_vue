@@ -1,10 +1,12 @@
 <script setup>
-import { computed, unref } from "vue";
+import { computed, onMounted, unref } from "vue";
 import { useIngredients } from "../utils/index.js";
 
-const { grouedIngredients } = useIngredients();
+const { groupedIngredients, fetchIngredients } = useIngredients();
 
 const statusOrder = ["Expired", "Soon to expire", "Fresh"];
+
+onMounted(() => fetchIngredients());
 </script>
 
 <template>
@@ -12,15 +14,18 @@ const statusOrder = ["Expired", "Soon to expire", "Fresh"];
     <div v-for="status in statusOrder" :key="status">
       <h2>{{ status }}</h2>
 
-      <div class="container" v-if="grouedIngredients[status]">
+      <div class="container" v-if="groupedIngredients">
         <button
           class="card plan-card"
           v-for="item in groupedIngredients[status]"
           :key="item.id"
+          :class="status"
         >
           {{ item.name }}
         </button>
       </div>
+
+      <p v-else-if="groupedIngredients">此類別目前沒有食材</p>
     </div>
   </section>
 </template>
@@ -30,7 +35,7 @@ const statusOrder = ["Expired", "Soon to expire", "Fresh"];
   background: #f3827e;
 }
 
-.soon-to-expire {
+.Soon {
   background: #ffc37e;
 }
 
