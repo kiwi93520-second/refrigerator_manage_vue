@@ -49,7 +49,30 @@ onMounted(() => fetchIngredients());
 }
 .container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 11px;
+}
+.card {
+  aspect-ratio: 1 / 1; /* 變成正方形，或是設 fixed height 如 height: 80px; */
+
+  /* 文字處理：防止長文字撐開卡片 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  word-break: break-all;
+  padding: 8px;
+
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.1s;
+}
+
+.card:active {
+  transform: scale(0.95);
 }
 </style>

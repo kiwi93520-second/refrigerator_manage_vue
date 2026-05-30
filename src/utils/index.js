@@ -25,30 +25,29 @@ function getMyDate(dat = Date.now()) {
   return `${year}-${month}-${day}`;
 }
 
+const Ingredients = ref([]);
+const isLoaded = ref(false);
 export function useIngredients() {
-  const Ingredients = ref([]);
-
   // catch data from supabase
-  const fetchIngredients = async () => {
+  const fetchIngredients = async (forceRefresh = false) => {
     try {
+      if (isLoaded.value && !forceRefresh) return;
       const { data, error } = await supabase.from("ingredients").select("*");
 
       if (error) {
         console.error("錯誤:", error);
       } else {
         console.log("--- 原始資料檢查 ---");
-        console.table(data); // 這會把資料轉成表格印在 Console，看欄位名是不是 expire_date
+        console.table(data);
         Ingredients.value = data;
+        isLoaded.value = true;
       }
     } catch (err) {
       console.error("😥😥😥error:", err);
     }
   };
 
-  //define 快過期天數
-  const SOON_TO_EXPIRE = 3;
-
-  //computedS
+  //computed
   const groupedIngredients = computed(() => {
     const items = Ingredients.value || [];
 
@@ -56,7 +55,6 @@ export function useIngredients() {
     today.setHours(0, 0, 0, 0);
 
     const processed = items.map((item) => {
-      // ⚠️ 注意：Supabase 回傳的是下底線 expire_date
       const expire = new Date(item.expire_date);
       const diffDays = Math.ceil((expire - today) / (1000 * 60 * 60 * 24));
 
@@ -79,7 +77,7 @@ export function useIngredients() {
 
   // onMounted(fetchIngredients);
 
-  return { Ingredients, groupedIngredients, fetchIngredients };
+  return { Ingredients, groupedIngredients, fetchIngredients, isLoaded };
 }
 
 // onMounted(() => {
