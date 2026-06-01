@@ -1,10 +1,22 @@
 <script setup>
-import { computed, onMounted, unref } from "vue";
+import { computed, onMounted, ref, unref } from "vue";
 import { useIngredients } from "../utils/index.js";
+import EditModal from "./pages/EditModel.vue";
 
 const { groupedIngredients, fetchIngredients } = useIngredients();
-
 const statusOrder = ["Expired", "Soon to expire", "Fresh"];
+const isModalOpen = ref(false);
+const selectedFood = ref(null);
+const openEdit = (item) => {
+  selectedFood.value = item;
+  isModalOpen.value = true;
+};
+
+const onDataChanged = async () => {
+  console.log("接收到刷新請求，正在重新拉取資料...");
+  isModalOpen.value = false;
+  await fetchIngredients();
+};
 
 onMounted(() => fetchIngredients());
 </script>
@@ -20,9 +32,17 @@ onMounted(() => fetchIngredients());
           v-for="item in groupedIngredients[status]"
           :key="item.id"
           :class="status"
+          @click="openEdit(item)"
         >
           {{ item.name }}
         </button>
+
+        <EditModal
+          v-if="isModalOpen"
+          :food="selectedFood"
+          @close="isModalOpen = false"
+          @refresh="onDataChanged"
+        />
       </div>
 
       <p v-else-if="groupedIngredients">此類別目前沒有食材</p>

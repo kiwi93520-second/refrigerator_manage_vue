@@ -1,0 +1,175 @@
+<script setup>
+import { ref, watch } from "vue";
+import { supabase } from "../../utils/supabase.js";
+
+const props = defineProps(["food"]);
+const emit = defineEmits(["close", "refresh"]);
+
+const localFood = ref({ ...props.food });
+const loading = ref(false);
+
+const handleUpdate = async () => {
+  loading.value = true;
+  const { error } = await supabase
+    .from("ingredients")
+    .update({
+      name: localFood.value.name,
+      quantity: localFood.value.quantity,
+    })
+    .eq("id", localFood.value.id);
+
+  if (error) {
+    alert("更新失敗");
+  } else {
+    emit("refresh"); // 成功後叫父元件更新
+  }
+  loading.value = false;
+};
+
+const handleDelete = async () => {
+  if (!confirm("確定刪除？")) return;
+
+  loading.value = true;
+  const { error } = await supabase
+    .from("ingredients")
+    .delete()
+    .eq("id", localFood.value.id);
+
+  if (error) {
+    alert("刪除失敗");
+  } else {
+    emit("refresh");
+  }
+  loading.value = false;
+};
+</script>
+
+<template>
+  <div class="modal-overlay" @click.self="$emit('close')">
+    <div class="modal-content">
+      <h3>編輯食材</h3>
+
+      <div class="form-group">
+        <label>食材名稱</label>
+        <input v-model="localFood.name" type="text" />
+      </div>
+
+      <div class="form-group">
+        <label>剩餘數量</label>
+        <input v-model.number="localFood.quantity" type="number" />
+      </div>
+
+      <div class="actions">
+        <button class="save-btn" @click="handleUpdate" :disabled="loading">
+          {{ loading ? "更新中..." : "儲存修改" }}
+        </button>
+        <button class="delete-btn" @click="handleDelete" :disabled="loading">
+          刪除食材
+        </button>
+        <button class="cancel-btn" @click="$emit('close')">取消</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+/* 滿屏遮罩層 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4); /* 半透明黑背景 */
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* 彈窗主體 */
+.modal-content {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 20px;
+  width: 85%;
+  max-width: 350px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+h3 {
+  margin: 0;
+  color: #333;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+/* 輸入框樣式 */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus {
+  border-color: #a6f780;
+}
+
+/* 按鈕容器 */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+button {
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition:
+    opacity 0.2s,
+    transform 0.1s;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* 不同按鈕的顏色 */
+.save-btn {
+  background-color: #a6f780; /* 綠色 */
+  color: #2c5a1d;
+}
+
+.delete-btn {
+  background-color: #f3827e; /* 紅色 */
+  color: white;
+}
+
+.cancel-btn {
+  background-color: #eee;
+  color: #666;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+</style>

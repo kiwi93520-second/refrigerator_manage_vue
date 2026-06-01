@@ -75,9 +75,38 @@ export function useIngredients() {
     );
   });
 
+  const addIngredient = async (name) => {
+    const newItem = {
+      name: name.name,
+      store_date: new Date().toISOString().split("T")[0],
+      expire_date: new Date(Date.now() + 3 * 86400000)
+        .toISOString()
+        .split("T")[0],
+      storage: name.location,
+      quantity: name.quantity,
+    };
+
+    const { data, error } = await supabase
+      .from("ingredients")
+      .insert([newItem])
+      .select();
+
+    if (!error && data) {
+      // 關鍵：直接更新全域 ref，畫面上所有組件都會瞬間跳出新食材
+      Ingredients.value.push(data[0]);
+      return { success: true, data: data };
+    }
+    return { success: false, error };
+  };
   // onMounted(fetchIngredients);
 
-  return { Ingredients, groupedIngredients, fetchIngredients, isLoaded };
+  return {
+    Ingredients,
+    groupedIngredients,
+    fetchIngredients,
+    isLoaded,
+    addIngredient,
+  };
 }
 
 // onMounted(() => {
