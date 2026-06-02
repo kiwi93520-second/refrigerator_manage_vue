@@ -35,10 +35,10 @@ const handleDelete = async () => {
     .delete()
     .eq("id", localFood.value.id);
 
-  if (error) {
-    alert("刪除失敗");
+  if (!error) {
+    emit("refresh", localFood.value.id);
   } else {
-    emit("refresh");
+    alert("刪除失敗");
   }
   loading.value = false;
 };

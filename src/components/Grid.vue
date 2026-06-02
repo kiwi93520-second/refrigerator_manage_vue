@@ -3,19 +3,24 @@ import { computed, onMounted, ref, unref } from "vue";
 import { useIngredients } from "../utils/index.js";
 import EditModal from "./pages/EditModel.vue";
 
-const { groupedIngredients, fetchIngredients } = useIngredients();
+const { Ingredients, groupedIngredients, fetchIngredients } = useIngredients();
 const statusOrder = ["Expired", "Soon to expire", "Fresh"];
 const isModalOpen = ref(false);
 const selectedFood = ref(null);
+
 const openEdit = (item) => {
   selectedFood.value = item;
   isModalOpen.value = true;
 };
 
-const onDataChanged = async () => {
-  console.log("接收到刷新請求，正在重新拉取資料...");
+const onDataChanged = (deletedId) => {
   isModalOpen.value = false;
-  await fetchIngredients();
+  if (Ingredients.value) {
+    Ingredients.value = Ingredients.value.filter(
+      (item) => item.id !== deletedId,
+    );
+    console.log("本地公共資料已同步刪除");
+  }
 };
 
 onMounted(() => fetchIngredients());
@@ -26,7 +31,7 @@ onMounted(() => fetchIngredients());
     <div v-for="status in statusOrder" :key="status">
       <h2>{{ status }}</h2>
 
-      <div class="container" v-if="groupedIngredients">
+      <div class="container" v-if="groupedIngredients[status]">
         <button
           class="card plan-card"
           v-for="item in groupedIngredients[status]"
