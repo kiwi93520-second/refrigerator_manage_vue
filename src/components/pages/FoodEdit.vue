@@ -11,7 +11,7 @@ const confirmAdd = async () => {
   const result = await addIngredient(resultPreview);
 
   if (result.success) {
-    alert(`成功新增 ${resultPreview} 到冰箱！`);
+    alert(`成功新增 ${resultPreview.name} 到冰箱！`);
     resultPreview.value = ""; // 清空文字，準備下一次錄音
   } else {
     alert("新增失敗，請檢查網路或資料庫設定");

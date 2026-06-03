@@ -1,20 +1,35 @@
 <script setup>
 import { ref, watch } from "vue";
+import { useRouter } from "vue-router";
 import { supabase } from "../../utils/supabase.js";
 
 const props = defineProps(["food"]);
 const emit = defineEmits(["close", "refresh"]);
-
 const localFood = ref({ ...props.food });
+console.log(localFood);
 const loading = ref(false);
+
+const extendDate = (originalDate, days = 0) => {
+  const date = new Date(originalDate);
+  date.setDate(date.getDate() + parseInt(days));
+  console.log(date);
+  return date.toISOString().split("T")[0]; // 格式化為 YYYY-MM-DD
+};
 
 const handleUpdate = async () => {
   loading.value = true;
+
+  const newExpireDate = extendDate(
+    localFood.value.expire_date,
+    localFood.value.delayday,
+  );
+
   const { error } = await supabase
     .from("ingredients")
     .update({
       name: localFood.value.name,
       quantity: localFood.value.quantity,
+      expire_date: newExpireDate,
     })
     .eq("id", localFood.value.id);
 
@@ -52,6 +67,12 @@ const handleDelete = async () => {
       <div class="form-group">
         <label>食材名稱</label>
         <input v-model="localFood.name" type="text" />
+      </div>
+
+      <label>有效期限:{{ localFood.expire_date }}</label>
+      <div class="form-group">
+        <label>延長天數</label>
+        <input v-model.number="localFood.delayday" type="number" />
       </div>
 
       <div class="form-group">
