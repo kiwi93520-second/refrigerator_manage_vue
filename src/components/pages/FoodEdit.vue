@@ -2,17 +2,22 @@
 import { onMounted, ref, reactive } from "vue";
 import { useIngredients } from "../../utils/index.js";
 import { useVoiceToText } from "../../utils/voiceToText.js";
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css'; 
 
 const { ingredients, fetchIngredients, addIngredient } = useIngredients();
 const { toggleListen, isListening, resultPreview } = useVoiceToText();
+const notyf = new Notyf({position:{x:'center',y:'top'}}	);
 
 const confirmAdd = async () => {
   // 呼叫 index.js 裡的 addIngredient
   const result = await addIngredient(resultPreview);
 
   if (result.success) {
-    alert(`成功新增 ${resultPreview.name} 到冰箱！`);
-    resultPreview.value = ""; // 清空文字，準備下一次錄音
+    notyf.success('成功新增!');
+    resultPreview.name = "";
+    resultPreview.quantity = "";
+    resultPreview.location = "";
   } else {
     alert("新增失敗，請檢查網路或資料庫設定");
     console.error(result.error);

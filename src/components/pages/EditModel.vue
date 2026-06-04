@@ -5,7 +5,7 @@ import { supabase } from "../../utils/supabase.js";
 
 const props = defineProps(["food"]);
 const emit = defineEmits(["close", "refresh"]);
-const localFood = ref({ ...props.food });
+const localFood = ref({ ...props.food, delayday: props.food.delayday ?? 0 });
 console.log(localFood);
 const loading = ref(false);
 
