@@ -2,43 +2,58 @@
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { supabase } from "../../utils/supabase.js";
+import { useFoodValidation } from "../../utils/vaildinput.js";
 
 const props = defineProps(["food"]);
 const emit = defineEmits(["close", "refresh"]);
 const localFood = ref({ ...props.food, delayday: props.food.delayday ?? 0 });
-console.log(localFood);
 const loading = ref(false);
+const { errors, validateFood } = useFoodValidation();
 
+watch(
+  () => localFood.value,
+  (newFood) => {
+    validateFood(newFood);
+  },
+  { deep: true },
+);
 const extendDate = (originalDate, days = 0) => {
   const date = new Date(originalDate);
   date.setDate(date.getDate() + parseInt(days));
-  console.log(date);
   return date.toISOString().split("T")[0]; // 格式化為 YYYY-MM-DD
 };
 
 const handleUpdate = async () => {
-  loading.value = true;
+  try {
+    if (!validateFood(localFood.value)) {
+      alert("欄位驗證未通過，請檢查紅字標示！");
+      return;
+    }
 
-  const newExpireDate = extendDate(
-    localFood.value.expire_date,
-    localFood.value.delayday,
-  );
+    loading.value = true;
+    const newExpireDate = extendDate(
+      localFood.value.expire_date,
+      localFood.value.delayday,
+    );
 
-  const { error } = await supabase
-    .from("ingredients")
-    .update({
-      name: localFood.value.name,
-      quantity: localFood.value.quantity,
-      expire_date: newExpireDate,
-    })
-    .eq("id", localFood.value.id);
-
-  if (error) {
-    alert("更新失敗");
-  } else {
-    emit("refresh"); // 成功後叫父元件更新
+    const { error } = await supabase
+      .from("ingredients")
+      .update({
+        name: localFood.value.name,
+        quantity: localFood.value.quantity,
+        expire_date: newExpireDate,
+      })
+      .eq("id", localFood.value.id);
+    if (error) throw error;
+    alert("更新成功！");
+    emit("refresh");
+    emit("close");
+  } catch (err) {
+    console.error("系統發生錯誤了:", err);
+    alert("程式執行失敗，錯誤原因: " + (err.message || err));
+  } finally {
+    loading.value = false;
   }
-  loading.value = false;
 };
 
 const handleDelete = async () => {
@@ -67,17 +82,25 @@ const handleDelete = async () => {
       <div class="form-group">
         <label>食材名稱</label>
         <input v-model="localFood.name" type="text" />
+        <span v-if="errors.name" class="text-red-500">{{ errors.name }}</span>
       </div>
 
       <label>有效期限:{{ localFood.expire_date }}</label>
+
       <div class="form-group">
         <label>延長天數</label>
         <input v-model.number="localFood.delayday" type="number" />
+        <span v-if="errors.delayday" class="text-red-500">{{
+          errors.delayday
+        }}</span>
       </div>
 
       <div class="form-group">
         <label>剩餘數量</label>
         <input v-model.number="localFood.quantity" type="number" />
+        <span v-if="errors.quantity" class="text-red-500">{{
+          errors.quantity
+        }}</span>
       </div>
 
       <div class="actions">
@@ -192,5 +215,8 @@ button:active {
 button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+}
+.text-red-500 {
+  color: rgba(244, 19, 19, 0.775);
 }
 </style>

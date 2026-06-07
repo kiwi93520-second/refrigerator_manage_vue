@@ -10,7 +10,7 @@ const { toggleListen, isListening, resultPreview } = useVoiceToText();
 const notyf = new Notyf({position:{x:'center',y:'top'}}	);
 
 const confirmAdd = async () => {
-  // 呼叫 index.js 裡的 addIngredient
+  
   const result = await addIngredient(resultPreview);
 
   if (result.success) {
