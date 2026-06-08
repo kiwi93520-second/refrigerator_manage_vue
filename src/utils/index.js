@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Welcome from "../components/pages/Welcome.vue";
 import Dashboard from "../components/pages/Dashboard.vue";
 import FoodEdit from "../components/pages/FoodEdit.vue";
+import { getCurrentUser } from "../supabase";
 
 export const StorageCategories = {
   refrigerated: "Refrigerated",
@@ -238,12 +239,56 @@ export function useIngredients() {
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: "/", redirect: "/dashboard" }, // 或 component: Dashboard
+    { path: "/", redirect: "/dashboard" },
 
-    { path: "/Welcome", component: Welcome },
-    { path: "/Dashboard", component: Dashboard },
-    { path: "/FoodEdit", component: FoodEdit },
+    {
+      path: "/welcome",
+      component: Welcome,
+    },
+    {
+      path: "/login",
+      component: Login,
+      meta: { requiresGuest: true },
+    },
+
+    {
+      path: "/dashboard",
+      component: Dashboard,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/foodedit",
+      component: FoodEdit,
+      meta: { requiresAuth: true },
+    },
   ],
 });
+
+router.beforeEach(async (to, from, next) => {
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+
+  const requiresGuest = to.matched.some((record) => record.meta.requiresGuest);
+
+  // 向 Supabase 確認目前有沒有使用者 session
+  const currentUser = await getCurrentUser();
+
+  if (requiresAuth && !currentUser) {
+    next("/login");
+  } else if (requiresGuest && currentUser) {
+    next("/dashboard");
+  } else {
+    next();
+  }
+});
+// const router = createRouter({
+//   history: createWebHistory(),
+//   routes: [
+//     { path: "/", redirect: "/dashboard" }, // 或 component: Dashboard
+
+//     { path: "/Welcome", component: Welcome },
+//     { path: "/Dashboard", component: Dashboard },
+//     { path: "/FoodEdit", component: FoodEdit },
+//   ],
+// });
 
 export default router;
