@@ -4,7 +4,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import Welcome from "../components/pages/Welcome.vue";
 import Dashboard from "../components/pages/Dashboard.vue";
 import FoodEdit from "../components/pages/FoodEdit.vue";
-import { getCurrentUser } from "../supabase";
+import Login from "../components/pages/Login.vue";
+import { getCurrentUser } from "../utils/supabase.js";
 
 export const StorageCategories = {
   refrigerated: "Refrigerated",
@@ -264,26 +265,32 @@ const router = createRouter({
   ],
 });
 
-router.beforeEach(async (to, from, next) => {
-  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+router.beforeEach(async (to, from) => {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  const isLoggedIn = !!session;
 
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const requiresGuest = to.matched.some((record) => record.meta.requiresGuest);
 
-  // 向 Supabase 確認目前有沒有使用者 session
-  const currentUser = await getCurrentUser();
+  console.log(
+    `去往: ${to.path}, 需要登入: ${requiresAuth}, 已登入: ${isLoggedIn}`,
+  );
 
-  if (requiresAuth && !currentUser) {
-    next("/login");
-  } else if (requiresGuest && currentUser) {
-    next("/dashboard");
-  } else {
-    next();
+  if (requiresAuth && !isLoggedIn) {
+    return "/login";
+  }
+
+  if (requiresGuest && isLoggedIn) {
+    return "/dashboard";
   }
 });
+
 // const router = createRouter({
 //   history: createWebHistory(),
 //   routes: [
-//     { path: "/", redirect: "/dashboard" }, // 或 component: Dashboard
+//     { path: "/", redirect: "/dashboard" },
 
 //     { path: "/Welcome", component: Welcome },
 //     { path: "/Dashboard", component: Dashboard },
