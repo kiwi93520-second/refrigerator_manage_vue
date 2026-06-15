@@ -1,26 +1,21 @@
 <script setup>
-import { computed, onMounted, ref, unref } from "vue";
-import { useIngredients } from "../utils/index.js";
-import EditModal from "./pages/EditModel.vue";
+import { computed, onMounted, ref, unref } from 'vue';
+import { useIngredients } from '../utils/index.js';
+import EditModal from './pages/EditModel.vue';
 
 const { Ingredients, groupedIngredients, fetchIngredients } = useIngredients();
-const statusOrder = ["Expired", "Soon to expire", "Fresh"];
+const statusOrder = ['Expired', 'Soon to expire', 'Fresh'];
 const isModalOpen = ref(false);
 const selectedFood = ref(null);
+const emit = defineEmits(['refresh', 'close']);
+
+const handleRefreshFromChild = () => {
+  emit('refresh');
+};
 
 const openEdit = (item) => {
   selectedFood.value = item;
   isModalOpen.value = true;
-};
-
-const onDataChanged = (deletedId) => {
-  isModalOpen.value = false;
-  if (Ingredients.value) {
-    Ingredients.value = Ingredients.value.filter(
-      (item) => item.id !== deletedId,
-    );
-    console.log("本地公共資料已同步刪除");
-  }
 };
 
 onMounted(() => fetchIngredients());
@@ -46,7 +41,7 @@ onMounted(() => fetchIngredients());
           v-if="isModalOpen"
           :food="selectedFood"
           @close="isModalOpen = false"
-          @refresh="onDataChanged"
+          @refresh="handleRefreshFromChild"
         />
       </div>
 

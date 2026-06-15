@@ -1,39 +1,41 @@
-import { onMounted, ref, reactive } from "vue";
-import { StorageCategories } from "./index.js";
+import { onMounted, ref, reactive } from 'vue';
+import { StorageCategories } from './index.js';
 
 export function useVoiceToText() {
   const isListening = ref(false);
   const resultPreview = reactive({
-    name: "",
+    name: '',
     quantity: 1,
-    location: "冷藏",
+    location: '冷藏',
   });
   // call speechrecongnition
   const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) {
-    alert("您的瀏覽器不支援語音辨識，建議使用 Chrome");
+    alert('您的瀏覽器不支援語音辨識，建議使用 Chrome');
   }
 
   const recognition = new SpeechRecognition();
-  recognition.lang = "zh-TW";
+  recognition.lang = 'zh-TW';
   recognition.continuous = false;
 
   // translate
   function parseVoiceCommand(text) {
-    const locations = ["冷藏", "冷凍", "櫥櫃"];
+    const locations = ['冷藏', '冷凍', '櫥櫃'];
 
     const qtyMatch = text.match(
-      /(\d+|一|二|三|四|五|六|七|八|九|十)\s*(個|瓶|把|支|份|顆)?/,
+      /(\d+|一|二|三|四|五|六|七|八|九|十|兩)\s*(個|瓶|把|支|份|顆)?/,
     );
-    const quantity = qtyMatch ? qtyMatch[1] : 1;
-
-    const location = locations.find((loc) => text.includes(loc)) || "冷藏";
+    let quantity = qtyMatch ? qtyMatch[1] : 1;
+    if (/^\d+$/.test(qtyMatch[1])) {
+      quantity = Number(qtyMatch[1]);
+    }
+    const location = locations.find((loc) => text.includes(loc)) || '冷藏';
 
     let name = text
-      .replace(/(放入|新增|加入|買了)/g, "")
-      .replace(location, "")
-      .replace(qtyMatch ? qtyMatch[0] : "", "")
+      .replace(/(放入|新增|加入|買了)/g, '')
+      .replace(location, '')
+      .replace(qtyMatch ? qtyMatch[0] : '', '')
       .trim();
 
     return { name, quantity, location };
@@ -45,17 +47,19 @@ export function useVoiceToText() {
 
   recognition.onresult = (event) => {
     const transcript = event.results[0][0].transcript;
-    console.log("聽到的是:", transcript);
+    console.log('聽到的是:', transcript);
 
     const parsed = parseVoiceCommand(transcript);
-    parsed.quantity = textToNumber(parsed.quantity);
+    if (typeof parsed.quantity !== 'number') {
+      parsed.quantity = textToNumber(parsed.quantity);
+    }
     parsed.location = getEnglishCategory(parsed.location);
     console.log(parsed);
 
     if (isNaN(parsed.quantity)) {
-      console.log("無法辨識為有效數字，請重新說一次。");
+      console.log('無法辨識為有效數字，請重新說一次。');
     } else {
-      console.log("轉換後的數字:", parsed.quantity);
+      console.log('轉換後的數字:', parsed.quantity);
     }
 
     Object.assign(resultPreview, parsed);
@@ -66,7 +70,7 @@ export function useVoiceToText() {
   };
 
   const toggleListen = () => {
-    if (!recognition) return alert("不支援語音");
+    if (!recognition) return alert('不支援語音');
     isListening.value ? recognition.stop() : recognition.start();
   };
 
@@ -77,13 +81,17 @@ export function useVoiceToText() {
       櫥櫃: StorageCategories.cabinet,
     };
 
-    return mapping[chineseName] || "Unknown";
+    return mapping[chineseName] || 'Unknown';
   }
   function textToNumber(text) {
+    if (typeof text !== 'string') {
+      text = String(text || '');
+    }
     const chineseMap = {
       零: 0,
       一: 1,
       二: 2,
+      兩: 2,
       三: 3,
       四: 4,
       五: 5,
@@ -95,13 +103,13 @@ export function useVoiceToText() {
     const unitMap = { 十: 10, 百: 100, 千: 1000, 萬: 10000 };
 
     let cleanStr = text
-      .replace(/[\s,]/g, "")
-      .replace(/[０-９]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 65248));
+      .replace(/[\s,]/g, '')
+      .replace(/[0-9]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 65248));
 
     let normalizedStr = cleanStr
-      .split("")
+      .split('')
       .map((char) => (chineseMap[char] !== undefined ? chineseMap[char] : char))
-      .join("");
+      .join('');
 
     let total = 0;
     let section = 0;
@@ -112,7 +120,7 @@ export function useVoiceToText() {
       const unitValue = unitMap[char];
 
       if (unitValue !== undefined) {
-        let num = tempNum === 0 && char === "十" ? 1 : tempNum;
+        let num = tempNum === 0 && char === '十' ? 1 : tempNum;
 
         if (unitValue >= 10000) {
           section = (section + (num || 1)) * unitValue;

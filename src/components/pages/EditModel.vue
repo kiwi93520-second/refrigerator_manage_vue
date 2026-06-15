@@ -1,14 +1,15 @@
 <script setup>
-import { ref, watch } from "vue";
-import { useRouter } from "vue-router";
-import { supabase } from "../../utils/supabase.js";
-import { useFoodValidation } from "../../utils/vaildinput.js";
+import { ref, watch } from 'vue';
+import { supabase } from '../../utils/supabase.js';
+import { useFoodValidation } from '../../utils/vaildinput.js';
+import { useIngredients } from '../../utils/index.js';
 
-const props = defineProps(["food"]);
-const emit = defineEmits(["close", "refresh"]);
+const props = defineProps(['food']);
+const emit = defineEmits(['close', 'refresh']);
 const localFood = ref({ ...props.food, delayday: props.food.delayday ?? 0 });
 const loading = ref(false);
 const { errors, validateFood } = useFoodValidation();
+const { fetchIngredients } = useIngredients();
 
 watch(
   () => localFood.value,
@@ -20,13 +21,13 @@ watch(
 const extendDate = (originalDate, days = 0) => {
   const date = new Date(originalDate);
   date.setDate(date.getDate() + parseInt(days));
-  return date.toISOString().split("T")[0]; // 格式化為 YYYY-MM-DD
+  return date.toISOString().split('T')[0]; // 格式化為 YYYY-MM-DD
 };
 
 const handleUpdate = async () => {
   try {
     if (!validateFood(localFood.value)) {
-      alert("欄位驗證未通過，請檢查紅字標示！");
+      alert('欄位驗證未通過，請檢查紅字標示！');
       return;
     }
 
@@ -36,39 +37,47 @@ const handleUpdate = async () => {
       localFood.value.delayday,
     );
 
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (!session) {
+      alert('登入資訊已過期，請重新登入！');
+      return;
+    }
+
     const { error } = await supabase
-      .from("ingredients")
+      .from('ingredients')
       .update({
         name: localFood.value.name,
         quantity: localFood.value.quantity,
         expire_date: newExpireDate,
       })
-      .eq("id", localFood.value.id);
+      .eq('id', localFood.value.id)
+      .eq('user_id', session.user.id);
     if (error) throw error;
-    alert("更新成功！");
-    emit("refresh");
-    emit("close");
+    alert('更新成功！');
+    emit('refresh');
+    emit('close');
   } catch (err) {
-    console.error("系統發生錯誤了:", err);
-    alert("程式執行失敗，錯誤原因: " + (err.message || err));
+    alert('程式執行失敗，錯誤原因: ' + (err.message || err));
   } finally {
     loading.value = false;
   }
 };
 
 const handleDelete = async () => {
-  if (!confirm("確定刪除？")) return;
+  if (!confirm('確定刪除？')) return;
 
   loading.value = true;
   const { error } = await supabase
-    .from("ingredients")
+    .from('ingredients')
     .delete()
-    .eq("id", localFood.value.id);
+    .eq('id', localFood.value.id);
 
   if (!error) {
-    emit("refresh", localFood.value.id);
+    emit('refresh', localFood.value.id);
   } else {
-    alert("刪除失敗");
+    alert('刪除失敗');
   }
   loading.value = false;
 };
@@ -104,8 +113,13 @@ const handleDelete = async () => {
       </div>
 
       <div class="actions">
-        <button class="save-btn" @click="handleUpdate" :disabled="loading">
-          {{ loading ? "更新中..." : "儲存修改" }}
+        <button
+          class="save-btn"
+          @click="handleUpdate"
+          :disabled="loading"
+          @refresh="$emit('refresh')"
+        >
+          {{ loading ? '更新中...' : '儲存修改' }}
         </button>
         <button class="delete-btn" @click="handleDelete" :disabled="loading">
           刪除食材
@@ -198,12 +212,12 @@ button:active {
 
 /* 不同按鈕的顏色 */
 .save-btn {
-  background-color: #a6f780; /* 綠色 */
+  background-color: #a6f780;
   color: #2c5a1d;
 }
 
 .delete-btn {
-  background-color: #f3827e; /* 紅色 */
+  background-color: #f3827e;
   color: white;
 }
 
