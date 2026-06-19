@@ -4,7 +4,9 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { supabase } from '../../utils/supabase.js';
 import { useIngredients } from '../../utils/index.js';
+import { Notyf } from 'notyf';
 
+const notyf = new Notyf({ position: { x: 'center', y: 'top' } });
 const router = useRouter();
 const userEmail = ref('');
 const { Ingredients, fetchIngredients } = useIngredients();
@@ -31,9 +33,9 @@ const handleLogout = async () => {
   const { error } = await supabase.auth.signOut();
 
   if (error) {
-    alert('登出失敗：' + error.message);
+    notyf.error('登出失敗：' + error.message);
   } else {
-    alert('已成功登出！');
+    notyf.success('已成功登出！');
 
     router.push('/login');
   }
@@ -59,7 +61,7 @@ const onDataChanged = async (deletedId) => {
     >
     <button @click="handleLogout" class="logout-btn">登出系統</button>
   </header>
-  <button>Food manage &rarr;</button>
+
   <Grid :ingredients="Ingredients" @refresh="onDataChanged" />
 </template>
 

@@ -1,15 +1,18 @@
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { supabase } from "../../utils/supabase.js";
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { supabase } from '../../utils/supabase.js';
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
 
 const router = useRouter();
-const email = ref("");
-const password = ref("");
-const errorMessage = ref("");
+const email = ref('');
+const password = ref('');
+const errorMessage = ref('');
+const notyf = new Notyf({ position: { x: 'center', y: 'top' } });
 
 const handleLogin = async () => {
-  errorMessage.value = "";
+  errorMessage.value = '';
   const { data, error } = await supabase.auth.signInWithPassword({
     email: email.value,
     password: password.value,
@@ -18,13 +21,13 @@ const handleLogin = async () => {
   if (error) {
     errorMessage.value = `登入失敗：${error.message}`;
   } else {
-    alert("登入成功！");
-    router.push("/dashboard");
+    notyf.success('登入成功！');
+    router.push('/dashboard');
   }
 };
 
 const handleRegister = async () => {
-  errorMessage.value = "";
+  errorMessage.value = '';
   const { data, error } = await supabase.auth.signUp({
     email: email.value,
     password: password.value,
@@ -33,8 +36,8 @@ const handleRegister = async () => {
   if (error) {
     errorMessage.value = `註框失敗：${error.message}`;
   } else {
-    alert("註冊成功並已自動登入！");
-    router.push("/dashboard");
+    notyf.success('註冊成功並已自動登入！');
+    router.push('/dashboard');
   }
 };
 </script>

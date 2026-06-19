@@ -3,6 +3,8 @@ import { ref, watch } from 'vue';
 import { supabase } from '../../utils/supabase.js';
 import { useFoodValidation } from '../../utils/vaildinput.js';
 import { useIngredients } from '../../utils/index.js';
+import { Notyf } from 'notyf';
+const notyf = new Notyf({ position: { x: 'center', y: 'top' } });
 
 const props = defineProps(['food']);
 const emit = defineEmits(['close', 'refresh']);
@@ -27,7 +29,7 @@ const extendDate = (originalDate, days = 0) => {
 const handleUpdate = async () => {
   try {
     if (!validateFood(localFood.value)) {
-      alert('欄位驗證未通過，請檢查紅字標示！');
+      notyf.error('欄位驗證未通過，請檢查紅字標示！');
       return;
     }
 
@@ -41,7 +43,7 @@ const handleUpdate = async () => {
       data: { session },
     } = await supabase.auth.getSession();
     if (!session) {
-      alert('登入資訊已過期，請重新登入！');
+      notyf.error('登入資訊已過期，請重新登入！');
       return;
     }
 
@@ -55,11 +57,11 @@ const handleUpdate = async () => {
       .eq('id', localFood.value.id)
       .eq('user_id', session.user.id);
     if (error) throw error;
-    alert('更新成功！');
+    notyf.success('更新成功！');
     emit('refresh');
     emit('close');
   } catch (err) {
-    alert('程式執行失敗，錯誤原因: ' + (err.message || err));
+    notyf.error('程式執行失敗，錯誤原因: ' + (err.message || err));
   } finally {
     loading.value = false;
   }
@@ -77,7 +79,7 @@ const handleDelete = async () => {
   if (!error) {
     emit('refresh', localFood.value.id);
   } else {
-    alert('刪除失敗');
+    notyf.error('刪除失敗');
   }
   loading.value = false;
 };

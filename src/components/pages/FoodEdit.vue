@@ -46,6 +46,10 @@ onMounted(() => {
     <button @click="toggleListen" :class="{ 'btn-active': isListening }">
       {{ isListening ? '正在聽...' : '按我說話' }}
     </button>
+    <h3>注意事項:</h3>
+    <p>1.只辨識中文</p>
+    <p>2.順序:食材名字->數量->位置(冷藏or冷凍)</p>
+    <p>3.ex:巧克力蛋糕一千個冷藏</p>
 
     <div v-if="resultPreview.name" class="preview-card">
       <h3>辨識結果：</h3>

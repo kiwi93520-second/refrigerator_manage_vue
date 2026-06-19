@@ -10,7 +10,6 @@ import { getCurrentUser } from '../utils/supabase.js';
 export const StorageCategories = {
   refrigerated: 'Refrigerated',
   frozen: 'Frozen',
-  cabinet: 'Cabinet',
 };
 export const StatusCategories = {
   expired: 'Expired',
@@ -141,7 +140,7 @@ const router = createRouter({
     {
       path: '/login',
       component: Login,
-      meta: { requiresGuest: true },
+      meta: { requiresGuest: true, hideNavbar: true },
     },
 
     {
