@@ -24,8 +24,6 @@ onMounted(async () => {
 
   if (session && session.user) {
     userEmail.value = session.user.email;
-
-    console.log('當前使用者 UID:', session.user.id);
   }
 });
 

@@ -1,10 +1,18 @@
-# Vue 3 + Vite
+## frontend:Vue 3 + Vite database:Supabase
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## deploy:cloudflare pages
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+[demo](https://refrigerator2.kiwi93520.workers.dev/)
+測試帳號:test123@gmail.com
+密碼:1234567890
+free 方案，限制比較多:)
 
-I learn from this video:[Vue.js Beginner Course | Build & Deploy a Modern Fitness App](https://www.youtube.com/watch?v=JAgeFLJYrUY)  
-2026/05/03 video-41:23  
-2026/05/06 put layout in app.vue
-2026/05/07 modify css
+I refernce this video:[Vue.js Beginner Course | Build & Deploy a Modern Fitness App](https://www.youtube.com/watch?v=JAgeFLJYrUY)
+
+### 2026.5.4 ~ 2026.5.10 base structure
+
+### 2026.5.11 ~ 2026.5.20 CRUD & router
+
+### 2026.5.25 ~ 2026.6.02 try to connect database(supabase)
+
+### 2026.6.3 ~ 2026.6.21 deploy frontend & add login
