@@ -50,6 +50,8 @@ const onDataChanged = async (deletedId) => {
     await fetchIngredients(true);
   }
 };
+  console.log("檢查網址:", import.meta.env.VITE_SUPABASE_URL);
+console.log("檢查所有變數:", import.meta.env);
 </script>
 
 <template>
