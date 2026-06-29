@@ -14,31 +14,31 @@
 *
 */
 
-@import url("https://fonts.googleapis.com/css2?family=Eczar:wght@400..800&family=Grenze:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Eczar:wght@400..800&family=Grenze:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 :root {
   --background-primary: white;
-  --background-secondary: "";
+  --background-secondary: '';
   --background-tertiary: #dbeafe;
-  --background-accent: "";
-  --background-compliment: "";
-  --background-gradient: "";
+  --background-accent: '';
+  --background-compliment: '';
+  --background-gradient: '';
   --background-muted: #f8fafc;
 
   --color-primary: #030615;
-  --color-secondary: "";
-  --color-tertiary: "";
-  --color-accent: "";
-  --color-compliment: "";
-  --color-gradient: "";
+  --color-secondary: '';
+  --color-tertiary: '';
+  --color-accent: '';
+  --color-compliment: '';
+  --color-gradient: '';
   --color-muted: ;
   --color-link: #2563eb;
   --color-link-transparent: rgba(37, 99, 235, 0.1);
 
-  --color-success: "";
-  --color-warning: "";
-  --color-error: "";
-  --color-info: "";
+  --color-success: '';
+  --color-warning: '';
+  --color-error: '';
+  --color-info: '';
   --color-highlight: #fef9c3;
 
   --gradient-start: #9580ff;
@@ -47,11 +47,11 @@
   --border-primary: #f1f5f9;
   --border-secondary: #bed1e7;
   --border-highlight: #64748b;
-  --border-tertiary: "";
+  --border-tertiary: '';
 
-  --shadow-dark: "";
-  --shadow-light: "";
-  --shadow-text: "";
+  --shadow-dark: '';
+  --shadow-light: '';
+  --shadow-text: '';
 
   --padding-small: 1rem;
   --padding-large: 2rem;
@@ -60,7 +60,7 @@
   --border-radius-large: 0.75rem;
   --highlight-border-radius: 0.5rem;
 
-  --text-selection: "";
+  --text-selection: '';
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -116,7 +116,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Eczar", serif;
+  font-family: 'Eczar', serif;
 }
 
 body {
@@ -147,7 +147,7 @@ h4,
 h5,
 h6,
 button {
-  font-family: "Grenze", serif;
+  font-family: 'Grenze', serif;
   width: fit-content;
 }
 
@@ -232,7 +232,7 @@ blockquote {
 }
 
 blockquote::after {
-  content: "";
+  content: '';
   display: block;
   position: absolute;
   left: 0;
@@ -436,11 +436,11 @@ textarea {
 
 button,
 select,
-input[type="submit"],
-input[type="button"],
-input[type="checkbox"],
-input[type="range"],
-input[type="radio"] {
+input[type='submit'],
+input[type='button'],
+input[type='checkbox'],
+input[type='range'],
+input[type='radio'] {
   cursor: pointer;
 }
 
@@ -501,23 +501,23 @@ input:disabled {
   opacity: 0.6;
 }
 
-input[type="number"].buttonless {
+input[type='number'].buttonless {
   appearance: textfield;
   -moz-appearance: textfield;
 }
 
-input[type="number"].buttonless::-webkit-inner-spin-button {
+input[type='number'].buttonless::-webkit-inner-spin-button {
   display: none;
   appearance: none;
 }
 
-input[type="number"].buttonless::-webkit-outer-spin-button {
+input[type='number'].buttonless::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-input[type="checkbox"],
-input[type="radio"] {
+input[type='checkbox'],
+input[type='radio'] {
   padding: 0.5rem;
   width: fit-content;
   vertical-align: middle;
@@ -527,26 +527,26 @@ input[type="radio"] {
     margin-top: 0.31em; */
 }
 
-input[type="checkbox"] {
+input[type='checkbox'] {
   border-radius: 7px;
   margin-left: 0;
 }
 
-input[type="radio"] {
+input[type='radio'] {
   border-radius: 100%;
 }
 
-input[type="checkbox"]:checked,
-input[type="radio"]:checked {
+input[type='checkbox']:checked,
+input[type='radio']:checked {
   background: var(--border-secondary);
 }
 
-input[type="range"] {
+input[type='range'] {
   vertical-align: middle;
   padding: 0;
 }
 
-input[type="color"] {
+input[type='color'] {
   appearance: none;
   border: none;
   outline-style: none;
@@ -670,7 +670,7 @@ details[open] summary {
   opacity: 0.6;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 720px) {
   body {
     font-size: 1rem;
     line-height: 1.5rem;
