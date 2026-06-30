@@ -5,13 +5,13 @@
         <div class="nav-brand">🗄️FoodApp</div>
         <div class="nav-links">
           <RouterLink to="/welcome" class="nav-item" active-class="active"
-            >歡迎首頁</RouterLink
+            >新手指南</RouterLink
           >
           <RouterLink to="/dashboard" class="nav-item" active-class="active"
             >儀表板</RouterLink
           >
           <RouterLink to="/foodedit" class="nav-item" active-class="active"
-            >編輯美食</RouterLink
+            >編輯食材</RouterLink
           >
         </div>
       </div>

@@ -67,4 +67,83 @@ onMounted(() => {
   </section>
 </template>
 
-<style scoped></style>
+<style scoped>
+button {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #e2e8f0;
+}
+
+.btn-active {
+  background: #3b82f6 !important;
+  color: #ffffff !important;
+  border-color: #2563eb !important;
+}
+
+h3 {
+  font-size: 1rem;
+  color: #1e293b;
+  margin: 15px 0 8px 0;
+}
+
+.add-food p {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 5px 0;
+}
+
+.preview-card {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+/* 預覽區塊裡面的輸入框 */
+.preview-card p {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.preview-card input {
+  flex: 1;
+  margin-left: 10px;
+  padding: 6px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  outline: none;
+}
+
+.preview-card input:focus {
+  border-color: #3b82f6;
+}
+
+.preview-card button {
+  background: #1e293b;
+  color: white;
+  border: none;
+  margin-top: 5px;
+}
+
+.preview-card button:hover {
+  background: #0f172a;
+}
+
+/* 5. 錯誤訊息 */
+.error {
+  color: #ef4444 !important;
+  text-align: center;
+  font-weight: bold;
+}
+</style>

@@ -14,7 +14,7 @@
     <div class="card start">
       <h3>🎉 Let's Go</h3>
       <p>Start to manage your food in refrigerator!</p>
-      <p>step1. 到新增食材新增食材</p>
+      <p>step1. 點擊導覽列的編輯食材去新增食材</p>
       <p>管理食物:到儀表板點擊想要的食材即可更改</p>
     </div>
   </section>
